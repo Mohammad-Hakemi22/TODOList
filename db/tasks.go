@@ -47,9 +47,9 @@ func AllTask() ([]Task, error) {
 	err := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(taskBucket)
 		c := b.Cursor()
-		for k, v := c.First(); k!= nil; k,v = c.Next() {
+		for k, v := c.First(); k != nil; k, v = c.Next() {
 			tasks = append(tasks, Task{
-				Key: btoi(k),
+				Key:   btoi(k),
 				Value: string(v),
 			})
 		}
@@ -59,6 +59,14 @@ func AllTask() ([]Task, error) {
 		return nil, err
 	}
 	return tasks, nil
+}
+
+func DeleteTask(key int) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(taskBucket)
+		return b.Delete(itob(key))
+	})
+	return err
 }
 
 func itob(v int) []byte {
