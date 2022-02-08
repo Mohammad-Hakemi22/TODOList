@@ -1,12 +1,9 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
 	"fmt"
 	"strconv"
+	"task/db"
 
 	"github.com/spf13/cobra"
 )
@@ -14,7 +11,7 @@ import (
 // doCmd represents the do command
 var doCmd = &cobra.Command{
 	Use:   "do",
-	Short: "Marks a task as compelet",
+	Short: "Marks a task as complete ✔",
 	Run: func(cmd *cobra.Command, args []string) {
 		var ids []int
 		for _, arg := range args {
@@ -25,7 +22,11 @@ var doCmd = &cobra.Command{
 				ids = append(ids, id)
 			}
 		}
-		fmt.Println(ids)
+		if len(ids) != 0 {
+			for _, id := range ids {
+				db.DeleteTask(id)
+			}
+		}
 	},
 }
 
